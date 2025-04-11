@@ -2,12 +2,12 @@ import fs from 'fs'
 import path from 'path'
 
 /**
- * Recursively searches for routes in the given segment path
- * @param {string} segmentPath - The path of the segment to recursively search for routes
+ * Recursively searches for routes in the given directory
+ * @param {string} dirPath - The path of the directory to recursively search for routes
  * @returns {string[]}
  */
-export function getRoutes(segmentPath) {
-  return searchRoute(segmentPath, [])
+export function getRoutes(dirPath) {
+  return searchRoute(dirPath, [])
 
   /**
    * @param {string} segmentPath - The path of the segment to recursively search for routes
@@ -28,7 +28,12 @@ export function getRoutes(segmentPath) {
         }
 
         if (/^page\.(js|ts|tsx|ts)$/.test(file)) {
-          accumulator.push(path.normalize(segmentPath))
+          accumulator.push(
+            path
+              .normalize(segmentPath)
+              .replace(new RegExp(`^${dirPath}`), '')
+              .replace(/\/\(.*?\)/, ''),
+          )
         }
       }
 
